@@ -1,2 +1,5 @@
 # CS11A-Assignments
-ityU CS11A Python Lab
+Welcome to the course repository for **CS11A**.
+
+## Overview
+This repository contains course materials, assignments, and resources.
