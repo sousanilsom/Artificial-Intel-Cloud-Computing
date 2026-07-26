@@ -1,0 +1,69 @@
+def binary_search(list_data, item):
+    low = 0
+    high = len(list_data) - 1
+
+    while low <= high:
+        mid = (low + high) // 2
+        guess = list_data[mid]
+
+        if guess == item:
+            return mid
+        if guess > item:
+            high = mid - 1
+        else:
+            low = mid + 1
+
+    return None
+
+my_list = [1, 3, 5, 7, 9, 11, 15, 22, 35]
+print("Index of 3:", binary_search(my_list, 3))
+print("Index of 22:", binary_search(my_list, 22))
+print("Index of -1:", binary_search(my_list, -1))
+
+# Creates individual data node containers for memory mapping
+class Node:
+    def __init__(self, number):
+        self.number = number # Stores the actual numeric integer data point
+        self.next = None     # Reference link to the next node container, starts empty
+
+# Creates the controller layer to manage the sequence of connected nodes
+class SinglyLinkedList:
+    def __init__(self):
+        self.head = None     # Initializes an empty list structure with no entry head
+        
+    def append(self, number):
+        new_node = Node(number) # Creates a fresh instance of a node wrapping our entry value
+        
+        if not self.head:       # Checks if the sequence is currently empty
+            self.head = new_node # Declares our new node as the initial head entry point
+            return              # Exits the function thread immediately
+            
+        current = self.head     # Sets our temporary search pointer to the head node
+        while current.next:     # Loops forward through the sequence while a valid link exists
+            current = current.next # Advances our temporary pointer one step forward
+            
+        current.next = new_node # Links the terminal node's pointer to our brand new node
+
+# Execution sequence to confirm memory structures link correctly
+my_linked_list = SinglyLinkedList()
+my_linked_list.append(10)
+my_linked_list.append(20)
+print("Singly linked list initialized and populated without execution errors.")
+
+"""
+======================================================================
+ASSIGNMENT THEORY QUESTIONS & ANSWERS
+======================================================================
+
+1. What are the logic errors in the code?
+The original code incorrectly used a single slash (/) when calculating the middle point ('mid'). 
+In Python, standard division returns a decimal float (such as 2.5). Because list indexes 
+must be whole integers, this triggers a runtime crash. Changing it to floor division (//) 
+drops the decimal remainder and fixes the index error.
+
+2. Why does the list need to be sorted?
+Binary search relies on a "divide-and-conquer" logic to find items. It assumes that if your 
+target item is smaller than the middle element, it can safely discard the entire right side 
+of the list. If the list is unsorted, elements are scattered randomly, which breaks this 
+assumption and causes the algorithm to miss items completely.
+"""
