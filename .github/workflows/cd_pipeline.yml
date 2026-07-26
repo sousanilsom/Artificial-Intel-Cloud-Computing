@@ -21,15 +21,18 @@ jobs:
 
       - name: Install Dependencies
         run: |
+          cd PE03
           python -m pip install --upgrade pip
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
 
       - name: Train Model
         run: |
+          cd PE03
           python train.py
 
       - name: Run Flask App & Test
         run: |
+          cd PE03
           python app.py &
           sleep 5
 
