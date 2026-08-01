@@ -48,7 +48,7 @@ Nilson Sousa
 
 - `hello_world_app.py` - initial Flask "Hello World" app (step 2-4)
 - `train_model.py` - trains and saves the Iris classifier
-- `app.py` - Flask API serving the trained model (final revised app, step 6)
+- `app.py` - Flask API serving the trained model (final revised app, step 6; includes a comment noting it started as `hello_world_app.py`)
 - `requirements.txt` - Flask, scikit-learn, joblib, numpy
 - `model/iris_model.pkl` - trained model artifact
 
