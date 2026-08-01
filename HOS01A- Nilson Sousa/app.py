@@ -1,3 +1,5 @@
+# This file started as the Hello World Flask app (see hello_world_app.py)
+# and was revised here to load and serve the trained Iris model instead.
 from flask import Flask, request, jsonify
 import joblib
 import numpy as np
