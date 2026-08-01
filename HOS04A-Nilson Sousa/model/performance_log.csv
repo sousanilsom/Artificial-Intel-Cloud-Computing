@@ -1,0 +1,10 @@
+timestamp,cycle,model_name,cv_mean_accuracy,cv_std_accuracy,test_accuracy,notes
+2026-08-01T15:32:32,automl_initial,LogisticRegression,0.9538,0.0162,0.9561,candidate evaluated
+2026-08-01T15:32:33,automl_initial,RandomForest,0.9582,0.0176,0.9649,candidate evaluated
+2026-08-01T15:32:36,automl_initial,GradientBoosting,0.9516,0.0164,0.9561,candidate evaluated
+2026-08-01T15:32:36,automl_initial,KNeighbors,0.9231,0.0209,0.9561,candidate evaluated
+2026-08-01T15:32:37,automl_initial,SVM,0.9033,0.0370,0.9474,candidate evaluated
+2026-08-01T15:32:37,automl_initial,RandomForest,0.9582,-,0.9649,SELECTED as best_model.pkl
+2026-08-01T15:33:12,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (-0.0263) — kept previous model
+2026-08-01T15:33:14,kaizen,RandomForest_candidate,-,-,0.9474,no improvement (-0.0439) — kept previous model
+2026-08-01T15:33:16,kaizen,RandomForest_candidate,-,-,0.9561,no improvement (-0.0351) — kept previous model
