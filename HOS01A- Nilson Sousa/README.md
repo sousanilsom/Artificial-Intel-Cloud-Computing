@@ -12,7 +12,7 @@ Nilson Sousa
    pip install Flask
    ```
 
-2. Created `app.py` with a minimal Flask "Hello World" app to confirm the environment worked:
+2. Created a minimal Flask "Hello World" app to confirm the environment worked, saved as [`hello_world_app.py`](hello_world_app.py):
    ```python
    from flask import Flask
 
@@ -25,7 +25,7 @@ Nilson Sousa
    if __name__ == '__main__':
        app.run()
    ```
-   Ran it and confirmed the page loaded in the browser.
+   Ran it and confirmed the page loaded in the browser. This was later replaced by `app.py` once the model was ready to serve (step 6).
 
 3. Created `train_model.py`, which loads the Iris dataset, trains a `RandomForestClassifier`, and saves it to `model/iris_model.pkl` with `joblib`.
 
@@ -46,8 +46,9 @@ Nilson Sousa
 
 ## Files
 
+- `hello_world_app.py` - initial Flask "Hello World" app (step 2-4)
 - `train_model.py` - trains and saves the Iris classifier
-- `app.py` - Flask API serving the trained model
+- `app.py` - Flask API serving the trained model (final revised app, step 6)
 - `requirements.txt` - Flask, scikit-learn, joblib, numpy
 - `model/iris_model.pkl` - trained model artifact
 
