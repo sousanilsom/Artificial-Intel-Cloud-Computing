@@ -1,0 +1,17 @@
+timestamp,cycle,model_name,cv_mean_accuracy,cv_std_accuracy,test_accuracy,notes
+2026-08-01T16:53:28,automl_initial,LogisticRegression,0.9538,0.0162,0.9561,candidate evaluated
+2026-08-01T16:53:30,automl_initial,RandomForest,0.9582,0.0176,0.9649,candidate evaluated
+2026-08-01T16:53:32,automl_initial,GradientBoosting,0.9516,0.0164,0.9561,candidate evaluated
+2026-08-01T16:53:33,automl_initial,KNeighbors,0.9231,0.0209,0.9561,candidate evaluated
+2026-08-01T16:53:33,automl_initial,SVM,0.9033,0.0370,0.9474,candidate evaluated
+2026-08-01T16:53:33,automl_initial,RandomForest,0.9582,-,0.9649,SELECTED as best_model.pkl
+2026-08-01T16:53:36,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:06,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:09,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:13,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:44,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:47,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:51,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:55,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:54:58,kaizen,RandomForest_candidate,-,-,0.9649,no improvement (+0.0000) — kept previous model
+2026-08-01T16:56:52,kaizen,RandomForest_candidate,-,-,0.9737,IMPROVED (+0.0088) — replaced deployed model at 2026-08-01 16:56:52

@@ -1,0 +1,2 @@
+timestamp,previous_test_accuracy,new_test_accuracy,accuracy_gain,n_estimators,max_depth
+2026-08-01T16:56:52,0.9649,0.9737,+0.0088,80,8
