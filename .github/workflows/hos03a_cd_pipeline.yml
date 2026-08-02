@@ -1,0 +1,35 @@
+name: HOS03A - CD ML Model Deployment
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          cd "HOS03A-Nilson Sousa"
+          pip install -r requirements.txt
+
+      - name: Train Model
+        run: |
+          cd "HOS03A-Nilson Sousa"
+          python train_model.py
+
+      - name: Run Flask App & Test
+        run: |
+          cd "HOS03A-Nilson Sousa"
+          nohup python app.py &
+          sleep 5
+          curl -X POST http://localhost:5000/predict -H "Content-Type: application/json" -d '{"features": [5.1, 3.5, 1.4, 0.2]}'
