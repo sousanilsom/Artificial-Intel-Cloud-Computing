@@ -125,7 +125,6 @@ def run_kaizen_cycle():
         )
         model.fit(X_train, y_train)
         score = model.score(X_test, y_test)
-        print(f"  tried n_estimators={n_estimators}, max_depth={max_depth} -> acc={score:.4f}")
         if score > best_candidate_score:
             best_candidate_score = score
             best_candidate_model = model
@@ -137,10 +136,6 @@ def run_kaizen_cycle():
     candidate_n_estimators = best_candidate_n_estimators
     candidate_max_depth = best_candidate_max_depth
 
-    print(f"Deployed model test accuracy:  {current_score:.4f}")
-    print(f"Best candidate this cycle:     {candidate_score:.4f} "
-          f"(n_estimators={candidate_n_estimators}, max_depth={candidate_max_depth})")
-
     timestamp = datetime.now().isoformat(timespec="seconds")
     readable_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"Old Accuracy: {current_score:.3f} | New Accuracy: {candidate_score:.3f}")
@@ -150,7 +145,7 @@ def run_kaizen_cycle():
 
         print("New model is better! Replacing the previous one.")
         print(f"Log updated at {readable_time}")
-        print(f"Log saved to {LOG_PATH}")
+        print(f"Model log saved to {LOG_PATH}")
 
         log_improvement(
             timestamp, current_score, candidate_score,
@@ -164,7 +159,7 @@ def run_kaizen_cycle():
     else:
         print("New model not better. Keeping the previous one.")
         print(f"Log updated at {readable_time}")
-        print(f"Log saved to {LOG_PATH}")
+        print(f"Model log saved to {LOG_PATH}")
         log_result([
             timestamp, "kaizen", "RandomForest_candidate",
             "-", "-", f"{candidate_score:.4f}",
