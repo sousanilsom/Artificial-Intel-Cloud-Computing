@@ -2,34 +2,40 @@ import time
 import csv
 import os
 import logging
+import sys
 from datetime import datetime
 from flask import Flask, request, jsonify
 
-# Configure logs directory
+# Configure logs directory FIRST
 LOG_DIR = "logs"
 CSV_LOG_FILE = os.path.join(LOG_DIR, "request_log.csv")
 APP_LOG_FILE = os.path.join(LOG_DIR, "app.log")
 
-# Create logs directory if it doesn't exist
+# Create logs directory
 os.makedirs(LOG_DIR, exist_ok=True)
 
-# Configure logging
+# Configure logging BEFORE Flask app
 logging.basicConfig(
-    filename=APP_LOG_FILE,
     level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s"
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.FileHandler(APP_LOG_FILE),
+        logging.StreamHandler(sys.stdout)
+    ]
 )
+
+logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
 
-# Write CSV header if file doesn't exist
+# Write CSV header
 if not os.path.exists(CSV_LOG_FILE):
     with open(CSV_LOG_FILE, "w", newline="") as f:
         writer = csv.writer(f)
         writer.writerow(["timestamp", "endpoint", "method", "status_code", "latency_ms"])
 
-# Track request statistics
+# Request stats
 request_stats = {
     "total_requests": 0,
     "total_latency_ms": 0.0,
@@ -52,17 +58,15 @@ def log_request(endpoint, method, status_code, latency_ms):
         writer = csv.writer(f)
         writer.writerow([timestamp, endpoint, method, status_code, f"{latency_ms:.2f}"])
     
-    # Log to app.log
-    logging.info(f"{method} {endpoint} -> {status_code} ({latency_ms:.2f} ms)")
+    # Log to file
+    logger.info(f"{method} {endpoint} -> {status_code} ({latency_ms:.2f} ms)")
 
 @app.before_request
 def start_timer():
-    """Start request timer"""
     request.start_time = time.time()
 
 @app.after_request
 def record_request(response):
-    """Record request metrics after response"""
     latency_ms = (time.time() - getattr(request, "start_time", time.time())) * 1000
     log_request(request.path, request.method, response.status_code, latency_ms)
     return response
@@ -71,41 +75,40 @@ def record_request(response):
 def predict():
     """Prediction endpoint with INPUT VALIDATION for PE05"""
     try:
-        # Get request data
         data = request.get_json(force=True, silent=True) or {}
         
-        # VALIDATION: Check if features key exists and is properly formatted
+        # VALIDATION: Check if features key exists
         if "features" not in data:
-            logging.error("Invalid input data. Missing 'features' key.")
+            logger.error("Invalid input data. Missing 'features' key.")
             return jsonify({"error": "Invalid input data. Expected 'features' key."}), 400
         
         features = data.get("features")
         
         # VALIDATION: Check if features is a list
         if not isinstance(features, list):
-            logging.error(f"Invalid input data. 'features' must be a list, got {type(features).__name__}.")
+            logger.error(f"Invalid input data. 'features' must be a list, got {type(features).__name__}.")
             return jsonify({"error": "Invalid input data. 'features' must be a list."}), 400
         
         # VALIDATION: Check if features has exactly 4 elements
         if len(features) != 4:
-            logging.error(f"Invalid input data. 'features' must have exactly 4 values, got {len(features)}.")
+            logger.error(f"Invalid input data. 'features' must have exactly 4 values, got {len(features)}.")
             return jsonify({"error": "Invalid input data. Expected 'features' with 4 numeric values."}), 400
         
         # VALIDATION: Check if all features are numeric
         try:
             numeric_features = [float(f) for f in features]
         except (ValueError, TypeError):
-            logging.error(f"Invalid input data. 'features' values must be numeric. Got: {features}")
+            logger.error(f"Invalid input data. 'features' values must be numeric. Got: {features}")
             return jsonify({"error": "Invalid input data. All 'features' must be numeric values."}), 400
         
-        # Perform simple prediction (sum of features)
+        # Perform prediction
         prediction = sum(numeric_features) % 3
-        logging.info(f"Successful prediction: {numeric_features} -> {prediction}")
+        logger.info(f"Successful prediction: {numeric_features} -> {prediction}")
         
         return jsonify({"prediction": prediction}), 200
         
     except Exception as e:
-        logging.error(f"Error processing request: {str(e)}")
+        logger.error(f"Error processing request: {str(e)}")
         return jsonify({"error": "Invalid input data."}), 400
 
 @app.route("/monitor", methods=["GET"])
