@@ -1,30 +1,16 @@
 import time
 import csv
 import os
-import logging
-import sys
 from datetime import datetime
 from flask import Flask, request, jsonify
 
-# Configure logs directory FIRST
+# Configure logs directory
 LOG_DIR = "logs"
 CSV_LOG_FILE = os.path.join(LOG_DIR, "request_log.csv")
 APP_LOG_FILE = os.path.join(LOG_DIR, "app.log")
 
 # Create logs directory
 os.makedirs(LOG_DIR, exist_ok=True)
-
-# Configure logging BEFORE Flask app
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler(APP_LOG_FILE),
-        logging.StreamHandler(sys.stdout)
-    ]
-)
-
-logger = logging.getLogger(__name__)
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -43,6 +29,14 @@ request_stats = {
     "start_time": time.time()
 }
 
+def write_log(level, message):
+    """Write directly to app.log file"""
+    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S,%f")[:-3]
+    log_entry = f"{timestamp} [{level}] {message}\n"
+    with open(APP_LOG_FILE, "a") as f:
+        f.write(log_entry)
+    print(log_entry.strip())
+
 def log_request(endpoint, method, status_code, latency_ms):
     """Log request to CSV and app.log"""
     request_stats["total_requests"] += 1
@@ -59,7 +53,7 @@ def log_request(endpoint, method, status_code, latency_ms):
         writer.writerow([timestamp, endpoint, method, status_code, f"{latency_ms:.2f}"])
     
     # Log to file
-    logger.info(f"{method} {endpoint} -> {status_code} ({latency_ms:.2f} ms)")
+    write_log("INFO", f"{method} {endpoint} -> {status_code} ({latency_ms:.2f} ms)")
 
 @app.before_request
 def start_timer():
@@ -79,36 +73,36 @@ def predict():
         
         # VALIDATION: Check if features key exists
         if "features" not in data:
-            logger.error("Invalid input data. Missing 'features' key.")
+            write_log("ERROR", "Invalid input data. Missing 'features' key.")
             return jsonify({"error": "Invalid input data. Expected 'features' key."}), 400
         
         features = data.get("features")
         
         # VALIDATION: Check if features is a list
         if not isinstance(features, list):
-            logger.error(f"Invalid input data. 'features' must be a list, got {type(features).__name__}.")
+            write_log("ERROR", f"Invalid input data. 'features' must be a list, got {type(features).__name__}.")
             return jsonify({"error": "Invalid input data. 'features' must be a list."}), 400
         
         # VALIDATION: Check if features has exactly 4 elements
         if len(features) != 4:
-            logger.error(f"Invalid input data. 'features' must have exactly 4 values, got {len(features)}.")
+            write_log("ERROR", f"Invalid input data. 'features' must have exactly 4 values, got {len(features)}.")
             return jsonify({"error": "Invalid input data. Expected 'features' with 4 numeric values."}), 400
         
         # VALIDATION: Check if all features are numeric
         try:
             numeric_features = [float(f) for f in features]
         except (ValueError, TypeError):
-            logger.error(f"Invalid input data. 'features' values must be numeric. Got: {features}")
+            write_log("ERROR", f"Invalid input data. 'features' values must be numeric. Got: {features}")
             return jsonify({"error": "Invalid input data. All 'features' must be numeric values."}), 400
         
         # Perform prediction
         prediction = sum(numeric_features) % 3
-        logger.info(f"Successful prediction: {numeric_features} -> {prediction}")
+        write_log("INFO", f"Successful prediction: {numeric_features} -> {prediction}")
         
         return jsonify({"prediction": prediction}), 200
         
     except Exception as e:
-        logger.error(f"Error processing request: {str(e)}")
+        write_log("ERROR", f"Error processing request: {str(e)}")
         return jsonify({"error": "Invalid input data."}), 400
 
 @app.route("/monitor", methods=["GET"])
@@ -139,4 +133,5 @@ def health():
     })
 
 if __name__ == "__main__":
+    write_log("INFO", "Flask app starting on 0.0.0.0:5000")
     app.run(host="0.0.0.0", port=5000)
