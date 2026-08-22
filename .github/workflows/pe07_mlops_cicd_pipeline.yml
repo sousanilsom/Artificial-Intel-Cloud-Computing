@@ -1,0 +1,38 @@
+name: PE07 - Azure MLOps CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          cd "HOS07A-Nilson Sousa"
+          pip install -r requirements.txt
+
+      - name: Train Model
+        run: |
+          cd "HOS07A-Nilson Sousa"
+          python train_to_azure.py
+
+      - name: Deploy Model
+        run: |
+          cd "HOS07A-Nilson Sousa"
+          python deploy_azure_model.py
+
+      - name: Simulate Post-Deployment Monitoring
+        run: |
+          cd "HOS07A-Nilson Sousa"
+          python monitor_azure.py
