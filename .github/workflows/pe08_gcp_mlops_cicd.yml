@@ -19,20 +19,20 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          cd "HOS08A-Nilson Sousa"
+          cd "PE08-Nilson Sousa"
           pip install -r requirements.txt
 
       - name: Train Model (Simulate Vertex AI)
         run: |
-          cd "HOS08A-Nilson Sousa"
+          cd "PE08-Nilson Sousa"
           python train_gcp.py
 
       - name: Deploy Model (Simulate GCP Endpoint)
         run: |
-          cd "HOS08A-Nilson Sousa"
+          cd "PE08-Nilson Sousa"
           python deploy_gcp_model.py
 
       - name: Monitor Model (Simulate Cloud Monitoring)
         run: |
-          cd "HOS08A-Nilson Sousa"
+          cd "PE08-Nilson Sousa"
           python monitor_gcp.py
