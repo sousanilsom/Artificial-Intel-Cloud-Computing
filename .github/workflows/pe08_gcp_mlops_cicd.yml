@@ -1,0 +1,38 @@
+name: GCP MLOps CI/CD Simulation
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  gcp-mlops:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Install Dependencies
+        run: |
+          cd "HOS08A-Nilson Sousa"
+          pip install -r requirements.txt
+
+      - name: Train Model (Simulate Vertex AI)
+        run: |
+          cd "HOS08A-Nilson Sousa"
+          python train_gcp.py
+
+      - name: Deploy Model (Simulate GCP Endpoint)
+        run: |
+          cd "HOS08A-Nilson Sousa"
+          python deploy_gcp_model.py
+
+      - name: Monitor Model (Simulate Cloud Monitoring)
+        run: |
+          cd "HOS08A-Nilson Sousa"
+          python monitor_gcp.py
